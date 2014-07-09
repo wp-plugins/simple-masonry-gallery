@@ -56,6 +56,7 @@ class SimpleMasonryAdmin {
 		}
 
 		wp_enqueue_style( 'jquery-ui-tabs', SIMPLEMASONRY_PLUGIN_URL.'/css/jquery-ui.css' );
+		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-ui-tabs' );
 		wp_enqueue_script( 'jquery-ui-tabs-in', SIMPLEMASONRY_PLUGIN_URL.'/js/jquery-ui-tabs-in.js' );
 		wp_enqueue_script( 'jquery-check-selectall-in', SIMPLEMASONRY_PLUGIN_URL.'/js/jquery-check-selectall-in.js' );
@@ -67,7 +68,7 @@ class SimpleMasonryAdmin {
 		$scriptname = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH).'?page=simplemasonry';
 
 		$simplemasonry_mgsettings = get_option('simplemasonry_mgsettings');
-		$pagemax =$simplemasonry_mgsettings[pagemax];
+		$pagemax =$simplemasonry_mgsettings['pagemax'];
 
 		?>
 
@@ -100,13 +101,12 @@ class SimpleMasonryAdmin {
 				'post_type' => 'any',
 				'numberposts' => -1,
 				'orderby' => 'date',
-				'order' => 'DESC',
-				'post_status' => null,
-				'post_parent' => $post->ID
+				'order' => 'DESC'
 				); 
 
 			$postpages = get_posts($args);
 
+			$pageallcount = 0;
 			// pagenation
 			foreach ( $postpages as $postpage ) {
 				++$pageallcount;

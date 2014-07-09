@@ -62,6 +62,7 @@ class SimpleMasonry {
 
 		echo $this->footerjscss;
 
+		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script('masonry' , get_template_directory_uri() . '/js/masonry.pkgd.min.js' , array('jquery') , false, true);
 
 	}
@@ -177,20 +178,22 @@ SIMPLEMASONRY;
 
 		$html5 = current_theme_supports( 'html5', 'gallery' );
 
-		if ($simplemasonry_apply[0] === 'true'){
-			extract(shortcode_atts(array(
-				'order'      => 'ASC',
-				'orderby'    => 'menu_order ID',
-				'id'         => $post ? $post->ID : 0,
-				'itemtag'    => $html5 ? 'figure'     : 'dl',
-				'icontag'    => $html5 ? 'div'        : 'dt',
-				'captiontag' => $html5 ? 'figcaption' : 'dd',
-				'columns'    => 3,
-				'size'       => 'full',
-				'include'    => '',
-				'exclude'    => '',
-				'link'       => 'file'
-			), $attr, 'gallery'));
+		if ( !empty($simplemasonry_apply) ) {
+			if ($simplemasonry_apply[0] === 'true'){
+				extract(shortcode_atts(array(
+					'order'      => 'ASC',
+					'orderby'    => 'menu_order ID',
+					'id'         => $post ? $post->ID : 0,
+					'itemtag'    => $html5 ? 'figure'     : 'dl',
+					'icontag'    => $html5 ? 'div'        : 'dt',
+					'captiontag' => $html5 ? 'figcaption' : 'dd',
+					'columns'    => 3,
+					'size'       => 'full',
+					'include'    => '',
+					'exclude'    => '',
+					'link'       => 'file'
+				), $attr, 'gallery'));
+			}
 		} else {
 			extract(shortcode_atts(array(
 				'order'      => 'ASC',
@@ -262,8 +265,10 @@ SIMPLEMASONRY;
 		 *                    Defaults to false if the theme supports HTML5 galleries.
 		 *                    Otherwise, defaults to true.
 		 */
-		if ($simplemasonry_apply[0] === 'true'){
-			$output = '<div id="container'.get_the_ID().'" class="centered">'."\n";
+		if ( !empty($simplemasonry_apply) ) {
+			if ($simplemasonry_apply[0] === 'true'){
+				$output = '<div id="container'.get_the_ID().'" class="centered">'."\n";
+			}
 		} else {
 			if ( apply_filters( 'use_default_gallery_style', ! $html5 ) ) {
 				$gallery_style = "
@@ -314,8 +319,10 @@ SIMPLEMASONRY;
 			if ( isset( $image_meta['height'], $image_meta['width'] ) )
 				$orientation = ( $image_meta['height'] > $image_meta['width'] ) ? 'portrait' : 'landscape';
 
-			if ($simplemasonry_apply[0] === 'true'){
-				$output .= '<div class="item'.get_the_ID().'">'.$image_output.'</div>'."\n";
+			if ( !empty($simplemasonry_apply) ) {
+				if ($simplemasonry_apply[0] === 'true'){
+					$output .= '<div class="item'.get_the_ID().'">'.$image_output.'</div>'."\n";
+				}
 			} else {
 				$output .= "<{$itemtag} class='gallery-item'>";
 				$output .= "
@@ -335,9 +342,11 @@ SIMPLEMASONRY;
 			}
 		}
 
-		if ($simplemasonry_apply[0] === 'true'){
-			$output .= "</div>\n";
-			$this->footerjscss .= $this->add_jscss();
+		if ( !empty($simplemasonry_apply) ) {
+			if ($simplemasonry_apply[0] === 'true'){
+				$output .= "</div>\n";
+				$this->footerjscss .= $this->add_jscss();
+			}
 		} else {
 			if ( ! $html5 && $columns > 0 && $i % $columns !== 0 ) {
 				$output .= "
