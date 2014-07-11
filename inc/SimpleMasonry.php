@@ -34,19 +34,22 @@ class SimpleMasonry {
 			return $link;
 		} else {
 			$simplemasonry_apply = get_post_meta( get_the_ID(), 'simplemasonry_apply' );
-
-			if ($simplemasonry_apply[0] === 'true'){
-
-				if(preg_match_all("/<a href=(.+?)><img(.+?)><\/a>/mis", $link, $result) !== false){
-			    	foreach ($result[0] as $value){
-						$links .= '<div class="item'.get_the_ID().'">'.$value.'</div>'."\n";
+			if ( !empty($simplemasonry_apply) ) {
+				if ($simplemasonry_apply[0] === 'true'){
+					$links = NULL;
+					if(preg_match_all("/<a href=(.+?)><img(.+?)><\/a>/mis", $link, $result) !== false){
+				    	foreach ($result[0] as $value){
+							$links .= '<div class="item'.get_the_ID().'">'.$value.'</div>'."\n";
+						}
 					}
+					$links = '<div id="container'.get_the_ID().'" class="centered">'."\n".$links.'</div>'."\n";
+					$this->footerjscss .= $this->add_jscss();
+
+					return $links;
+
+				} else {
+					return $link;
 				}
-				$links = '<div id="container'.get_the_ID().'" class="centered">'."\n".$links.'</div>'."\n";
-				$this->footerjscss .= $this->add_jscss();
-
-				return $links;
-
 			} else {
 				return $link;
 			}

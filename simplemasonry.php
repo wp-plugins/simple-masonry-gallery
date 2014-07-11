@@ -2,7 +2,7 @@
 /*
 Plugin Name: Simple Masonry Gallery
 Plugin URI: http://wordpress.org/plugins/simple-masonry-gallery/
-Version: 1.1
+Version: 1.2
 Description: Add the effect of Masonry to image.
 Author: Katsushi Kawamori
 Author URI: http://gallerylink.nyanko.org/medialink/simple-masonry-gallery/
