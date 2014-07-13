@@ -302,15 +302,30 @@ class SimpleMasonryAdmin {
 			<tr>
 				<td>
 					<div>
-						<input type="radio" name="simplemasonry_apply" value="true" <?php if ($simplemasonry_apply[0] === 'true') echo 'checked'; ?>><?php _e('Apply'); ?>&nbsp;&nbsp;
-						<input type="radio" name="simplemasonry_apply" value="false" <?php if ($simplemasonry_apply[0] <> 'true') echo 'checked'; ?>><?php _e('None'); ?>
+						<?php
+						if (!empty($simplemasonry_apply)) {
+						?>
+							<input type="radio" name="simplemasonry_apply" value="true" <?php if ($simplemasonry_apply[0] === 'true') { echo 'checked'; }?>><?php _e('Apply'); ?>&nbsp;&nbsp;
+							<input type="radio" name="simplemasonry_apply" value="false" <?php if ($simplemasonry_apply[0] <> 'true') { echo 'checked'; }?>><?php _e('None');
+						} else {
+						?>
+							<input type="radio" name="simplemasonry_apply" value="true"><?php _e('Apply'); ?>&nbsp;&nbsp;
+							<input type="radio" name="simplemasonry_apply" value="false" checked><?php _e('None');
+						}
+						?>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<div>
-						<?php echo __('Columns').__('Width'); ?><input type="text" name="simplemasonry_width" value="<?php echo $simplemasonry_width[0]; ?>" size="4">px
+						<?php
+						if (!empty($simplemasonry_width)) {
+							echo __('Columns').__('Width'); ?><input type="text" name="simplemasonry_width" value="<?php echo $simplemasonry_width[0]; ?>" size="4">px<?php
+						} else {
+							echo __('Columns').__('Width'); ?><input type="text" name="simplemasonry_width" value="" size="4">px<?php
+						}
+						?>
 					</div>
 				</td>
 			</tr>
@@ -360,11 +375,15 @@ class SimpleMasonryAdmin {
 		if($column_name === 'column_simplemasonry'){
 			$simplemasonry_apply = get_post_meta( $post_id, 'simplemasonry_apply' );
 			$simplemasonry_width = get_post_meta( $post_id, 'simplemasonry_width' );
-			if ($simplemasonry_apply[0]){
-				?>
-				<div><?php _e('Apply'); ?></div>
-				<div><?php echo __('Columns').__('Width').'&nbsp;&nbsp;'.$simplemasonry_width[0].'px'; ?></div>
-				<?php
+			if ( !empty($simplemasonry_apply) ) {
+				if ($simplemasonry_apply[0]){
+					?>
+					<div><?php _e('Apply'); ?></div>
+					<div><?php echo __('Columns').__('Width').'&nbsp;&nbsp;'.$simplemasonry_width[0].'px'; ?></div>
+					<?php
+				} else {
+					_e('None');
+				}
 			} else {
 				_e('None');
 			}
@@ -388,11 +407,15 @@ class SimpleMasonryAdmin {
 		if($column_name === 'column_simplemasonry'){
 			$simplemasonry_apply = get_post_meta( $post_id, 'simplemasonry_apply' );
 			$simplemasonry_width = get_post_meta( $post_id, 'simplemasonry_width' );
-			if ($simplemasonry_apply[0]){
-				?>
-				<div><?php _e('Apply'); ?></div>
-				<div><?php echo __('Columns').__('Width').'&nbsp;&nbsp;'.$simplemasonry_width[0].'px'; ?></div>
-				<?php
+			if ( !empty($simplemasonry_apply) ) {
+				if ($simplemasonry_apply[0]){
+					?>
+					<div><?php _e('Apply'); ?></div>
+					<div><?php echo __('Columns').__('Width').'&nbsp;&nbsp;'.$simplemasonry_width[0].'px'; ?></div>
+					<?php
+				} else {
+					_e('None');
+				}
 			} else {
 				_e('None');
 			}
