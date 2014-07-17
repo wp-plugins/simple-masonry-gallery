@@ -341,19 +341,21 @@ class SimpleMasonryAdmin {
 	 */
 	function save_apply_simplemasonry_postdata( $post_id ) {
 
-		$dataapply = $_POST['simplemasonry_apply'];
-		if ( $dataapply === 'true' ) {
-			add_post_meta( $post_id, 'simplemasonry_apply', $dataapply, true );
-			$datawidth = $_POST['simplemasonry_width'];
-			if ( empty($datawidth) ) { $datawidth = 200; }
-			if ( "" == get_post_meta( $post_id, 'simplemasonry_width') ) {
-				add_post_meta( $post_id, 'simplemasonry_width', $datawidth, true );
-			} else if ( $datawidth != get_post_meta( $post_id, 'simplemasonry_width' ) ) {
-				update_post_meta( $post_id, 'simplemasonry_width', $datawidth );
+		if ( isset($_POST['simplemasonry_apply']) ) {
+			$dataapply = $_POST['simplemasonry_apply'];
+			if ( $dataapply === 'true' ) {
+				add_post_meta( $post_id, 'simplemasonry_apply', $dataapply, true );
+				$datawidth = $_POST['simplemasonry_width'];
+				if ( empty($datawidth) ) { $datawidth = 200; }
+				if ( "" == get_post_meta( $post_id, 'simplemasonry_width') ) {
+					add_post_meta( $post_id, 'simplemasonry_width', $datawidth, true );
+				} else if ( $datawidth != get_post_meta( $post_id, 'simplemasonry_width' ) ) {
+					update_post_meta( $post_id, 'simplemasonry_width', $datawidth );
+				}
+			} else if ( $dataapply === '' || $dataapply === 'false' ) {
+				delete_post_meta( $post_id, 'simplemasonry_apply' );
+				delete_post_meta( $post_id, 'simplemasonry_width' );
 			}
-		} else if ( $dataapply === '' || $dataapply === 'false' ) {
-			delete_post_meta( $post_id, 'simplemasonry_apply' );
-			delete_post_meta( $post_id, 'simplemasonry_width' );
 		}
 
 	}
