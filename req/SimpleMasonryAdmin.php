@@ -293,8 +293,14 @@ class SimpleMasonryAdmin {
 	 */
 	function apply_simplemasonry_custom_box() {
 
-		$simplemasonry_apply = get_post_meta( $_GET['post'], 'simplemasonry_apply' );
-		$simplemasonry_width = get_post_meta( $_GET['post'], 'simplemasonry_width' );
+		if ( isset($_GET['post']) ) {
+			$get_post = $_GET['post'];
+		} else {
+			$get_post = NULL;
+		}
+
+		$simplemasonry_apply = get_post_meta( $get_post, 'simplemasonry_apply' );
+		$simplemasonry_width = get_post_meta( $get_post, 'simplemasonry_width' );
 
 		?>
 		<table>
