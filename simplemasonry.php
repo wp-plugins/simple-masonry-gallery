@@ -2,7 +2,7 @@
 /*
 Plugin Name: Simple Masonry Gallery
 Plugin URI: http://wordpress.org/plugins/simple-masonry-gallery/
-Version: 1.5
+Version: 2.0
 Description: Add the effect of Masonry to image.
 Author: Katsushi Kawamori
 Author URI: http://gallerylink.nyanko.org/medialink/simple-masonry-gallery/
@@ -38,6 +38,7 @@ Domain Path: /languages
 	require_once( dirname( __FILE__ ) . '/req/SimpleMasonryAdmin.php' );
 	$simplemasonryadmin = new SimpleMasonryAdmin();
 	add_action( 'admin_menu', array($simplemasonryadmin, 'plugin_menu'));
+	add_action( 'admin_enqueue_scripts', array($simplemasonryadmin, 'load_custom_wp_admin_style') );
 	add_action( 'admin_menu', array($simplemasonryadmin, 'add_apply_simplemasonry_custom_box'));
 	add_action( 'save_post', array($simplemasonryadmin, 'save_apply_simplemasonry_postdata'));
 	add_filter( 'plugin_action_links', array($simplemasonryadmin, 'settings_link'), 10, 2 );
@@ -45,19 +46,19 @@ Domain Path: /languages
 	add_action('manage_posts_custom_column', array($simplemasonryadmin, 'posts_custom_columns_simplemasonry'), 10, 2);
 	add_filter('manage_pages_columns', array($simplemasonryadmin, 'pages_columns_simplemasonry'));
 	add_action('manage_pages_custom_column', array($simplemasonryadmin, 'pages_custom_columns_simplemasonry'), 10, 2);
+	add_action( 'admin_footer', array($simplemasonryadmin, 'load_custom_wp_admin_style2') );
 	unset($simplemasonryadmin);
 
 	include_once( SIMPLEMASONRY_PLUGIN_BASE_DIR.'/inc/SimpleMasonry.php' );
 	$simplemasonry = new SimpleMasonry();
-	$footerjscss = '';
-	$simplemasonry->footerjscss = $footerjscss;
+	$footer_jscss_s = array();
+	$simplemasonry->footer_jscss_s = $footer_jscss_s;
 
 	// for post or page
 	add_filter( 'the_content', array($simplemasonry, 'add_img_tag'), -999 );
 
 	// for gallery
-	remove_shortcode('gallery', 'gallery_shortcode');
-	add_shortcode('gallery', array($simplemasonry, 'simplemasonry_gallery_shortcode'));
+	add_filter( 'post_gallery', array($simplemasonry, 'add_gallery') );
 
 	add_action( 'wp_footer', array($simplemasonry, 'add_footer'), 17 );
 

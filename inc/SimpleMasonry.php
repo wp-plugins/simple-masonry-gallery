@@ -21,7 +21,7 @@
 
 class SimpleMasonry {
 
-	public $footerjscss;
+	public $footer_jscss_s;
 
 	/* ==================================================
 	* @param	string	$link
@@ -36,14 +36,16 @@ class SimpleMasonry {
 			$simplemasonry_apply = get_post_meta( get_the_ID(), 'simplemasonry_apply' );
 			if ( !empty($simplemasonry_apply) ) {
 				if ($simplemasonry_apply[0] === 'true'){
+
 					$links = NULL;
 					if(preg_match_all("/<a href=(.+?)><img(.+?)><\/a>/mis", $link, $result) !== false){
 				    	foreach ($result[0] as $value){
-							$links .= '<div class="item'.get_the_ID().'">'.$value.'</div>'."\n";
+							$links .= '<div class="item-contents'.get_the_ID().'">'.$value.'</div>'."\n";
 						}
 					}
-					$links = '<div id="container'.get_the_ID().'" class="centered">'."\n".$links.'</div>'."\n";
-					$this->footerjscss .= $this->add_jscss();
+
+					$links = '<div id="container-contents'.get_the_ID().'" class="centered">'."\n".$links.'</div>'."\n";
+					$this->footer_jscss_s['contents'.get_the_ID()] = $this->add_jscss('contents');
 
 					return $links;
 
@@ -63,7 +65,9 @@ class SimpleMasonry {
 	*/
 	function add_footer(){
 
-		echo $this->footerjscss;
+		foreach ( $this->footer_jscss_s as $footer_jscss ) {
+			echo $footer_jscss;
+		}
 
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script('masonry' , get_template_directory_uri() . '/js/masonry.pkgd.min.js' , array('jquery') , false, true);
@@ -72,9 +76,10 @@ class SimpleMasonry {
 
 	/* ==================================================
 	 * Add js css
+	 * @param	string	$platform
 	 * @since	1.0
 	 */
-	function add_jscss(){
+	function add_jscss($platform){
 
 		$id_masonry = get_the_ID();
 		$simplemasonry_width = get_post_meta( $id_masonry, 'simplemasonry_width' );
@@ -86,8 +91,8 @@ $simplemasonry_add_jscss = <<<SIMPLEMASONRY
 <!-- BEGIN: Simple Masonry Gallery -->
 <script type="text/javascript">
 jQuery(window).load(function(){
-	jQuery('#container{$id_masonry}').masonry({
-		itemSelector : '.item{$id_masonry}',
+	jQuery('#container-{$platform}{$id_masonry}').masonry({
+		itemSelector : '.item-{$platform}{$id_masonry}',
 	    isAnimated: true,
     	isFitWidth: true,
 	    containerStyle: { position: 'relative' },
@@ -96,15 +101,31 @@ jQuery(window).load(function(){
 });
 </script>
 <style type="text/css">
-#container{$id_masonry}{ margin:0 auto; padding:0; }
-.item{$id_masonry} { width: {$masonry_width}px; float:left; margin:1px; padding:1px; }
-.item{$id_masonry} img{width:100%; max-width:100%; height:auto; margin:0;}
+#container-{$platform}{$id_masonry}{ margin:0 auto; padding:0; }
+.item-{$platform}{$id_masonry} { width: {$masonry_width}px; float:left; margin:1px; padding:1px; }
+.item-{$platform}{$id_masonry} img{width:100%; max-width:100%; height:auto; margin:0;}
 </style>
 <!-- END: Simple Masonry Gallery -->
 
 SIMPLEMASONRY;
 
 		return $simplemasonry_add_jscss;
+
+	}
+
+	/* ==================================================
+	* @param	none
+	* @since	2.0
+	*/
+	function add_gallery() {
+
+		$simplemasonry_apply = get_post_meta( get_the_ID(), 'simplemasonry_apply' );
+		if ( !empty($simplemasonry_apply) ){
+			if ($simplemasonry_apply[0] === 'true'){
+				remove_shortcode('gallery', 'gallery_shortcode');
+				add_shortcode('gallery', array($this, 'simplemasonry_gallery_shortcode'));
+			}
+		}
 
 	}
 
@@ -142,6 +163,8 @@ SIMPLEMASONRY;
 	function simplemasonry_gallery_shortcode( $attr ) {
 
 		$simplemasonry_apply = get_post_meta( get_the_ID(), 'simplemasonry_apply' );
+
+
 
 		$post = get_post();
 
@@ -181,37 +204,19 @@ SIMPLEMASONRY;
 
 		$html5 = current_theme_supports( 'html5', 'gallery' );
 
-		if ( !empty($simplemasonry_apply) ) {
-			if ($simplemasonry_apply[0] === 'true'){
-				extract(shortcode_atts(array(
-					'order'      => 'ASC',
-					'orderby'    => 'menu_order ID',
-					'id'         => $post ? $post->ID : 0,
-					'itemtag'    => $html5 ? 'figure'     : 'dl',
-					'icontag'    => $html5 ? 'div'        : 'dt',
-					'captiontag' => $html5 ? 'figcaption' : 'dd',
-					'columns'    => 3,
-					'size'       => 'full',
-					'include'    => '',
-					'exclude'    => '',
-					'link'       => 'file'
-				), $attr, 'gallery'));
-			}
-		} else {
-			extract(shortcode_atts(array(
-				'order'      => 'ASC',
-				'orderby'    => 'menu_order ID',
-				'id'         => $post ? $post->ID : 0,
-				'itemtag'    => $html5 ? 'figure'     : 'dl',
-				'icontag'    => $html5 ? 'div'        : 'dt',
-				'captiontag' => $html5 ? 'figcaption' : 'dd',
-				'columns'    => 3,
-				'size'       => 'thumbnail',
-				'include'    => '',
-				'exclude'    => '',
-				'link'       => ''
-			), $attr, 'gallery'));
-		}
+		extract(shortcode_atts(array(
+			'order'      => 'ASC',
+			'orderby'    => 'menu_order ID',
+			'id'         => $post ? $post->ID : 0,
+			'itemtag'    => $html5 ? 'figure'     : 'dl',
+			'icontag'    => $html5 ? 'div'        : 'dt',
+			'captiontag' => $html5 ? 'figcaption' : 'dd',
+			'columns'    => 3,
+			'size'       => 'full',
+			'include'    => '',
+			'exclude'    => '',
+			'link'       => 'file'
+		), $attr, 'gallery'));
 
 		$id = intval($id);
 		if ( 'RAND' == $order )
@@ -240,72 +245,7 @@ SIMPLEMASONRY;
 			return $output;
 		}
 
-		$itemtag = tag_escape($itemtag);
-		$captiontag = tag_escape($captiontag);
-		$icontag = tag_escape($icontag);
-		$valid_tags = wp_kses_allowed_html( 'post' );
-		if ( ! isset( $valid_tags[ $itemtag ] ) )
-			$itemtag = 'dl';
-		if ( ! isset( $valid_tags[ $captiontag ] ) )
-			$captiontag = 'dd';
-		if ( ! isset( $valid_tags[ $icontag ] ) )
-			$icontag = 'dt';
-
-		$columns = intval($columns);
-		$itemwidth = $columns > 0 ? floor(100/$columns) : 100;
-		$float = is_rtl() ? 'right' : 'left';
-
-		$selector = "gallery-{$instance}";
-
-		$gallery_style = $gallery_div = '';
-
-		/**
-		 * Filter whether to print default gallery styles.
-		 *
-		 * @since 3.1.0
-		 *
-		 * @param bool $print Whether to print default gallery styles.
-		 *                    Defaults to false if the theme supports HTML5 galleries.
-		 *                    Otherwise, defaults to true.
-		 */
-		if ( !empty($simplemasonry_apply) ) {
-			if ($simplemasonry_apply[0] === 'true'){
-				$output = '<div id="container'.get_the_ID().'" class="centered">'."\n";
-			}
-		} else {
-			if ( apply_filters( 'use_default_gallery_style', ! $html5 ) ) {
-				$gallery_style = "
-				<style type='text/css'>
-					#{$selector} {
-						margin: auto;
-					}
-					#{$selector} .gallery-item {
-						float: {$float};
-						margin-top: 10px;
-						text-align: center;
-						width: {$itemwidth}%;
-					}
-					#{$selector} img {
-						border: 2px solid #cfcfcf;
-					}
-					#{$selector} .gallery-caption {
-						margin-left: 0;
-					}
-					/* see gallery_shortcode() in wp-includes/media.php */
-				</style>\n\t\t";
-			}
-			$size_class = sanitize_html_class( $size );
-			$gallery_div = "<div id='$selector' class='gallery galleryid-{$id} gallery-columns-{$columns} gallery-size-{$size_class}'>";
-			/**
-			 * Filter the default gallery shortcode CSS styles.
-			 *
-			 * @since 2.5.0
-			 *
-			 * @param string $gallery_style Default gallery shortcode CSS styles.
-			 * @param string $gallery_div   Opening HTML div container for the gallery shortcode output.
-			 */
-			$output = apply_filters( 'gallery_style', $gallery_style . $gallery_div );
-		}
+		$output = '<div id="container-gallery'.get_the_ID().'" class="centered">'."\n";
 
 		$i = 0;
 		foreach ( $attachments as $id => $attachment ) {
@@ -322,42 +262,11 @@ SIMPLEMASONRY;
 			if ( isset( $image_meta['height'], $image_meta['width'] ) )
 				$orientation = ( $image_meta['height'] > $image_meta['width'] ) ? 'portrait' : 'landscape';
 
-			if ( !empty($simplemasonry_apply) ) {
-				if ($simplemasonry_apply[0] === 'true'){
-					$output .= '<div class="item'.get_the_ID().'">'.$image_output.'</div>'."\n";
-				}
-			} else {
-				$output .= "<{$itemtag} class='gallery-item'>";
-				$output .= "
-					<{$icontag} class='gallery-icon {$orientation}'>
-						$image_output
-					</{$icontag}>";
-				if ( $captiontag && trim($attachment->post_excerpt) ) {
-					$output .= "
-						<{$captiontag} class='wp-caption-text gallery-caption'>
-						" . wptexturize($attachment->post_excerpt) . "
-						</{$captiontag}>";
-				}
-				$output .= "</{$itemtag}>";
-				if ( ! $html5 && $columns > 0 && ++$i % $columns == 0 ) {
-					$output .= '<br style="clear: both" />';
-				}
-			}
+			$output .= '<div class="item-gallery'.get_the_ID().'">'.$image_output.'</div>'."\n";
 		}
 
-		if ( !empty($simplemasonry_apply) ) {
-			if ($simplemasonry_apply[0] === 'true'){
-				$output .= "</div>\n";
-				$this->footerjscss .= $this->add_jscss();
-			}
-		} else {
-			if ( ! $html5 && $columns > 0 && $i % $columns !== 0 ) {
-				$output .= "
-					<br style='clear: both' />";
-			}
-			$output .= "
-				</div>\n";
-		}
+		$output .= "</div>\n";
+		$this->footer_jscss_s['gallery'.get_the_ID()] = $this->add_jscss('gallery');
 
 		return $output;
 

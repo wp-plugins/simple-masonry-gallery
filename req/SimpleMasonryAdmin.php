@@ -44,6 +44,24 @@ class SimpleMasonryAdmin {
 		add_options_page( 'Simple Masonry Gallery Options', 'Simple Masonry Gallery', 'manage_options', 'simplemasonry', array($this, 'plugin_options') );
 	}
 
+	/* ==================================================
+	 * Add Css and Script
+	 * @since	2.0
+	 */
+	function load_custom_wp_admin_style() {
+		wp_enqueue_style( 'jquery-responsiveTabs', SIMPLEMASONRY_PLUGIN_URL.'/css/responsive-tabs.css' );
+		wp_enqueue_style( 'jquery-responsiveTabs-style', SIMPLEMASONRY_PLUGIN_URL.'/css/style.css' );
+		wp_enqueue_script('jquery');
+		wp_enqueue_script( 'jquery-responsiveTabs', SIMPLEMASONRY_PLUGIN_URL.'/js/jquery.responsiveTabs.min.js' );
+	}
+
+	/* ==================================================
+	 * Add Css and Script on footer
+	 * @since	2.0
+	 */
+	function load_custom_wp_admin_style2() {
+		echo $this->add_jscss();
+	}
 
 	/* ==================================================
 	 * Settings page
@@ -54,12 +72,6 @@ class SimpleMasonryAdmin {
 		if ( !current_user_can( 'manage_options' ) )  {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		}
-
-		wp_enqueue_style( 'jquery-ui-tabs', SIMPLEMASONRY_PLUGIN_URL.'/css/jquery-ui.css' );
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'jquery-ui-tabs' );
-		wp_enqueue_script( 'jquery-ui-tabs-in', SIMPLEMASONRY_PLUGIN_URL.'/js/jquery-ui-tabs-in.js' );
-		wp_enqueue_script( 'jquery-check-selectall-in', SIMPLEMASONRY_PLUGIN_URL.'/js/jquery-check-selectall-in.js' );
 
 		if( !empty($_POST) ) { 
 			$this->options_updated();
@@ -75,16 +87,16 @@ class SimpleMasonryAdmin {
 		<div class="wrap">
 		<h2>Simple Masonry Gallery</h2>
 
-	<div id="tabs">
+	<div id="simplemasonry-admin-tabs">
 	  <ul>
-	    <li><a href="#tabs-1"><?php _e('Settings'); ?></a></li>
-		<li><a href="#tabs-2"><?php _e('Caution:'); ?></a></li>
+	    <li><a href="#simplemasonry-admin-tabs-1"><?php _e('Settings'); ?></a></li>
+		<li><a href="#simplemasonry-admin-tabs-2"><?php _e('Caution:'); ?></a></li>
 	<!--
-		<li><a href="#tabs-3">FAQ</a></li>
+		<li><a href="#simplemasonry-admin-tabs-3">FAQ</a></li>
 	 -->
 	  </ul>
 
-	  <div id="tabs-1">
+	  <div id="simplemasonry-admin-tabs-1">
 		<div class="wrap">
 		<h2><?php _e('Settings'); ?></h2>
 			<form method="post" action="<?php echo $scriptname; ?>">
@@ -124,18 +136,21 @@ class SimpleMasonryAdmin {
 			?>
 			<table class="wp-list-table widefat">
 			<tbody>
-				<tr><td colspan="4">
-				<td align="right">
+				<tr>
+				<td align="right" colspan="3">
 				<?php $this->pagenation($page, $pagebegin, $pageend, $pagelast, $scriptname);
 				?>
 				</td>
 				</tr>
 				<tr>
-				<td align="left" valign="middle"><?php _e('Title'); ?></td>
-				<td align="left" valign="middle"><?php _e('Type'); ?></td>
-				<td align="left" valign="middle"><?php _e('Date/Time'); ?></td>
-				<td align="left" valign="middle"><?php _e('Apply'); ?><div><input type="checkbox" id="group_simplemasonry" class="checkAll"></div></td>
-				<td align="left" valign="middle"><?php echo __('Columns').__('Width').'(px)'; ?></td>
+				<td align="left" valign="middle"><?php _e('Apply'); ?><div><input type="checkbox" id="group_simplemasonry" class="simplemasonry-admin-checkAll"></div></td>
+				<td align="left" valign="middle">
+				<div><?php _e('Title'); ?></div>
+				<div><?php _e('Type'); ?>&nbsp&nbsp<?php _e('Date/Time'); ?></div>
+				</td>
+				<td align="left" valign="middle">
+				<div><?php echo __('Columns').__('Width').'(px)'; ?></div>
+				</td>
 				</tr>
 			<?php
 
@@ -151,15 +166,18 @@ class SimpleMasonryAdmin {
 						$date = $postpage->post_date;
 					?>
 						<tr>
-							<td align="left" valign="middle"><a style="color: #4682b4;" title="<?php _e('View');?>" href="<?php echo $link; ?>" target="_blank"><?php echo $title; ?></a></td>
-							<td align="left" valign="middle"><?php echo $posttype; ?></td>
-							<td align="left" valign="middle"><?php echo $date; ?></td>
-							<td align="left" valign="middle">
+							<td align="left" valign="middle" border="1">
 							    <input type="hidden" class="group_simplemasonry" name="simplemasonry_applys[<?php echo $postpage->ID; ?>]" value="false">
 							    <input type="checkbox" class="group_simplemasonry" name="simplemasonry_applys[<?php echo $postpage->ID; ?>]" value="true" <?php if ( $apply == true ) { echo 'checked'; }?>>
 							</td>
 							<td align="left" valign="middle">
+							<div><a style="color: #4682b4;" title="<?php _e('View');?>" href="<?php echo $link; ?>" target="_blank"><?php echo $title; ?></a></div>
+							<div><?php echo $posttype; ?>&nbsp&nbsp<?php echo $date; ?></div>
+							</td>
+							<td align="left" valign="middle">
+							<div>
 								<input type="text" name="simplemasonry_widths[<?php echo $postpage->ID; ?>]" value="<?php echo $width; ?>" size="4">
+							</div>
 							</td>
 						</tr>
 					<?php
@@ -171,8 +189,8 @@ class SimpleMasonryAdmin {
 				}
 			}
 			?>
-				<tr><td colspan="3">
-				<td align="right">
+				<tr>
+				<td align="right" colspan="3">
 				<?php $this->pagenation($page, $pagebegin, $pageend, $pagelast, $scriptname);
 				?>
 				</td>
@@ -188,7 +206,7 @@ class SimpleMasonryAdmin {
 		</div>
 	  </div>
 
-	  <div id="tabs-2">
+	  <div id="simplemasonry-admin-tabs-2">
 		<div class="wrap">
 			<h2><?php _e('Caution:'); ?></h2>
 			<li><h3><?php _e('Meta-box of Simple Masonry Gallery will be added to [Edit Post] and [Edit Page]. Please apply it. Also, please enter the column width.', 'simplemasonry'); ?></h3></li>
@@ -197,7 +215,7 @@ class SimpleMasonryAdmin {
 	  </div>
 
 	<!--
-	  <div id="tabs-3">
+	  <div id="simplemasonry-admin-tabs-3">
 		<div class="wrap">
 		<h2>FAQ</h2>
 
@@ -285,6 +303,16 @@ class SimpleMasonryAdmin {
 	function add_apply_simplemasonry_custom_box() {
 	    add_meta_box('simplemasonry', 'Simple Masonry Gallery', array(&$this,'apply_simplemasonry_custom_box'), 'page', 'side', 'high');
 	    add_meta_box('simplemasonry', 'Simple Masonry Gallery', array(&$this,'apply_simplemasonry_custom_box'), 'post', 'side', 'high');
+
+		$args = array(
+		   'public'   => true,
+		   '_builtin' => false
+		);
+		$custom_post_types = get_post_types( $args, 'objects', 'and' ); 
+		foreach ( $custom_post_types as $post_type ) {
+		    add_meta_box('simplemasonry', 'Simple Masonry Gallery', array(&$this,'apply_simplemasonry_custom_box'), $post_type->name, 'side', 'high');
+		}
+
 	}
 	 
 	/* ==================================================
@@ -428,6 +456,38 @@ class SimpleMasonryAdmin {
 				_e('None');
 			}
 	    }
+	}
+
+	/* ==================================================
+	 * Add js css
+	 * @since	2.0
+	 */
+	function add_jscss(){
+
+// JS
+$simplemasonry_add_jscss = <<<SIMPLEMASONRYGALLERY
+
+<!-- BEGIN: Simple Masonry Gallery -->
+<script type="text/javascript">
+	jQuery(document).ready(function () {
+		jQuery('#simplemasonry-admin-tabs').responsiveTabs({
+			startCollapsed: 'accordion'
+		});
+	});
+</script>
+<script type="text/javascript">
+	jQuery(function(){
+		jQuery('.simplemasonry-admin-checkAll').on('change', function() {
+			jQuery('.' + this.id).prop('checked', this.checked);
+		});
+	});
+</script>
+<!-- END: Simple Masonry Gallery -->
+
+SIMPLEMASONRYGALLERY;
+
+		return $simplemasonry_add_jscss;
+
 	}
 
 }
