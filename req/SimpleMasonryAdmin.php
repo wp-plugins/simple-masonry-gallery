@@ -412,7 +412,7 @@ class SimpleMasonryAdmin {
 			$simplemasonry_apply = get_post_meta( $post_id, 'simplemasonry_apply' );
 			$simplemasonry_width = get_post_meta( $post_id, 'simplemasonry_width' );
 			if ( !empty($simplemasonry_apply) ) {
-				if ($simplemasonry_apply[0]){
+				if ($simplemasonry_apply[0] === 'true'){
 					?>
 					<div><?php _e('Apply'); ?></div>
 					<div><?php echo __('Columns').__('Width').'&nbsp;&nbsp;'.$simplemasonry_width[0].'px'; ?></div>
@@ -444,7 +444,7 @@ class SimpleMasonryAdmin {
 			$simplemasonry_apply = get_post_meta( $post_id, 'simplemasonry_apply' );
 			$simplemasonry_width = get_post_meta( $post_id, 'simplemasonry_width' );
 			if ( !empty($simplemasonry_apply) ) {
-				if ($simplemasonry_apply[0]){
+				if ($simplemasonry_apply[0] === 'true'){
 					?>
 					<div><?php _e('Apply'); ?></div>
 					<div><?php echo __('Columns').__('Width').'&nbsp;&nbsp;'.$simplemasonry_width[0].'px'; ?></div>

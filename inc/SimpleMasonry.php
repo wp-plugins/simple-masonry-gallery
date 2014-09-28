@@ -24,38 +24,109 @@ class SimpleMasonry {
 	public $footer_jscss_s;
 
 	/* ==================================================
+	* @param	none
+	* @since	3.0
+	*/
+	function filter_select(){
+
+		$simplemasonry_apply = get_post_meta( get_the_ID(), 'simplemasonry_apply' );
+		if ( !empty($simplemasonry_apply) && $simplemasonry_apply[0] === 'true' ) {
+
+			$pattern_gallerylink = '/\[' . preg_quote('gallerylink') . '[^\]]*\]/im';
+			$pattern_medialink = '/\[' . preg_quote('medialink') . '[^\]]*\]/im';
+
+			$post_text = get_post( get_the_ID() ); 
+			if (!empty($post_text->post_content)) {
+				$contents = $post_text->post_content;
+			}
+
+			if ( !empty($contents) && preg_match($pattern_gallerylink, $contents) ) {
+				// for GalleryLink http://wordpress.org/plugins/gallerylink/
+				add_filter( 'album_gallerylink', array($this, 'add_img_tag'), 17);
+				add_filter( 'album_gallerylink', array($this, 'add_div_tag'), 18 );
+			} else if ( !empty($contents) && preg_match($pattern_medialink, $contents) ) {
+				// for MediaLink http://wordpress.org/plugins/medialink/
+				add_filter( 'album_medialink', array($this, 'add_img_tag'), 17);
+				add_filter( 'album_medialink', array($this, 'add_div_tag'), 18 );
+			} else {
+				// for post or page
+				add_filter( 'the_content', array($this, 'add_img_tag'), 9 );
+				remove_shortcode('gallery', 'gallery_shortcode');
+				add_shortcode('gallery', array($this, 'simplemasonry_gallery_shortcode'));
+				add_filter( 'the_content', array($this, 'add_div_tag'), 16 );
+			}
+
+		}
+
+	}
+
+	/* ==================================================
 	* @param	string	$link
-	* @return	string	$link
+	* @return	string	$links
+	* @since	3.0
+	*/
+	function add_div_tag($link) {
+
+		$simplemasonry_apply = get_post_meta( get_the_ID(), 'simplemasonry_apply' );
+		if ( !empty($simplemasonry_apply) && $simplemasonry_apply[0] === 'true' ) {
+			$links = '<div id="simplemasonry-container-'.get_the_ID().'" class="centered">'."\n".$link.'</div>'."\n";
+		} else {
+			$links = $link;
+		}
+
+		return $links;
+
+	}
+
+	/* ==================================================
+	* @param	string	$link
+	* @return	string	$links
 	* @since	1.0
 	*/
 	function add_img_tag($link) {
 
-		if ( get_post_gallery( get_the_ID() ) ) {
-			return $link;
-		} else {
-			$simplemasonry_apply = get_post_meta( get_the_ID(), 'simplemasonry_apply' );
-			if ( !empty($simplemasonry_apply) ) {
-				if ($simplemasonry_apply[0] === 'true'){
+		$simplemasonry_apply = get_post_meta( get_the_ID(), 'simplemasonry_apply' );
+		if ( !empty($simplemasonry_apply) && $simplemasonry_apply[0] === 'true' ) {
 
-					$links = NULL;
-					if(preg_match_all("/<a href=(.+?)><img(.+?)><\/a>/mis", $link, $result) !== false){
-				    	foreach ($result[0] as $value){
-							$links .= '<div class="item-contents'.get_the_ID().'">'.$value.'</div>'."\n";
-						}
-					}
+			$gallery_shortcode = NULL;
+			$pattern_gallery = '/\[' . preg_quote('gallery ') . '[^\]]*\]/im';
+			if ( !empty($link) && preg_match($pattern_gallery, $link) ) {
+				preg_match($pattern_gallery, $link, $retgallery);
+				$gallery_shortcode = $retgallery[0];
+			}
 
-					$links = '<div id="container-contents'.get_the_ID().'" class="centered">'."\n".$links.'</div>'."\n";
-					$this->footer_jscss_s['contents'.get_the_ID()] = $this->add_jscss('contents');
+			$gallerylink_shortcode = NULL;
+			$pattern_gallerylink = '/\[' . preg_quote('gallerylink') . '[^\]]*\]/im';
+			if ( !empty($link) && preg_match($pattern_gallerylink, $link) ) {
+				preg_match($pattern_gallerylink, $link, $retgallerylink);
+				$gallerylink_shortcode = $retgallerylink[0];
+			}
 
-					return $links;
+			$medialink_shortcode = NULL;
+			$pattern_medialink = '/\[' . preg_quote('medialink') . '[^\]]*\]/im';
+			if ( !empty($link) && preg_match($pattern_medialink, $link) ) {
+				preg_match($pattern_medialink, $link, $retmedialink);
+				$medialink_shortcode = $retmedialink[0];
+			}
 
-				} else {
-					return $link;
+			$links = NULL;
+			if(preg_match_all("/<a href=(.+?)><img(.+?)><\/a>/mis", $link, $result) !== false){
+		    	foreach ($result[0] as $value){
+					$links .= '<div class="simplemasonry-item-'.get_the_ID().'">'.$value.'</div>'."\n";
+				}
+				if( !empty($links) ) {
+					$this->footer_jscss_s[get_the_ID()] = $this->add_jscss();
 				}
 			} else {
-				return $link;
+				$links = $link;
 			}
+
+			$links = $links."\n".$gallery_shortcode."\n".$gallerylink_shortcode."\n".$medialink_shortcode;
+		} else {
+			$links = $link;
 		}
+
+		return $links;
 
 	}
 
@@ -76,10 +147,10 @@ class SimpleMasonry {
 
 	/* ==================================================
 	 * Add js css
-	 * @param	string	$platform
+	 * @param	none
 	 * @since	1.0
 	 */
-	function add_jscss($platform){
+	function add_jscss(){
 
 		$id_masonry = get_the_ID();
 		$simplemasonry_width = get_post_meta( $id_masonry, 'simplemasonry_width' );
@@ -91,8 +162,8 @@ $simplemasonry_add_jscss = <<<SIMPLEMASONRY
 <!-- BEGIN: Simple Masonry Gallery -->
 <script type="text/javascript">
 jQuery(window).load(function(){
-	jQuery('#container-{$platform}{$id_masonry}').masonry({
-		itemSelector : '.item-{$platform}{$id_masonry}',
+	jQuery('#simplemasonry-container-{$id_masonry}').masonry({
+		itemSelector : '.simplemasonry-item-{$id_masonry}',
 	    isAnimated: true,
     	isFitWidth: true,
 	    containerStyle: { position: 'relative' },
@@ -101,31 +172,15 @@ jQuery(window).load(function(){
 });
 </script>
 <style type="text/css">
-#container-{$platform}{$id_masonry}{ margin:0 auto; padding:0; }
-.item-{$platform}{$id_masonry} { width: {$masonry_width}px; float:left; margin:1px; padding:1px; }
-.item-{$platform}{$id_masonry} img{width:100%; max-width:100%; height:auto; margin:0;}
+#simplemasonry-container-{$id_masonry}{ margin:0 auto; padding:0; }
+.simplemasonry-item-{$id_masonry} { width: {$masonry_width}px; float:left; margin:1px; padding:1px; }
+.simplemasonry-item-{$id_masonry} img{width:100%; max-width:100%; height:auto; margin:0;}
 </style>
 <!-- END: Simple Masonry Gallery -->
 
 SIMPLEMASONRY;
 
 		return $simplemasonry_add_jscss;
-
-	}
-
-	/* ==================================================
-	* @param	none
-	* @since	2.0
-	*/
-	function add_gallery() {
-
-		$simplemasonry_apply = get_post_meta( get_the_ID(), 'simplemasonry_apply' );
-		if ( !empty($simplemasonry_apply) ){
-			if ($simplemasonry_apply[0] === 'true'){
-				remove_shortcode('gallery', 'gallery_shortcode');
-				add_shortcode('gallery', array($this, 'simplemasonry_gallery_shortcode'));
-			}
-		}
 
 	}
 
@@ -161,10 +216,6 @@ SIMPLEMASONRY;
 	 * @return string HTML content to display gallery.
 	 */
 	function simplemasonry_gallery_shortcode( $attr ) {
-
-		$simplemasonry_apply = get_post_meta( get_the_ID(), 'simplemasonry_apply' );
-
-
 
 		$post = get_post();
 
@@ -245,7 +296,7 @@ SIMPLEMASONRY;
 			return $output;
 		}
 
-		$output = '<div id="container-gallery'.get_the_ID().'" class="centered">'."\n";
+		$output = NULL;
 
 		$i = 0;
 		foreach ( $attachments as $id => $attachment ) {
@@ -262,11 +313,10 @@ SIMPLEMASONRY;
 			if ( isset( $image_meta['height'], $image_meta['width'] ) )
 				$orientation = ( $image_meta['height'] > $image_meta['width'] ) ? 'portrait' : 'landscape';
 
-			$output .= '<div class="item-gallery'.get_the_ID().'">'.$image_output.'</div>'."\n";
+			$output .= '<div class="simplemasonry-item-'.get_the_ID().'">'.$image_output.'</div>'."\n";
 		}
 
-		$output .= "</div>\n";
-		$this->footer_jscss_s['gallery'.get_the_ID()] = $this->add_jscss('gallery');
+		$this->footer_jscss_s[get_the_ID()] = $this->add_jscss();
 
 		return $output;
 

@@ -4,7 +4,7 @@ Donate link: http://gallerylink.nyanko.org/medialink/simple-masonry-gallery/
 Tags: masonry, jquery, gallery, image, images, photo, photos, picture, pictures
 Requires at least: 3.0.1
 Tested up to: 3.4
-Stable tag: 2.0
+Stable tag: 3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,15 @@ Add the effect of Masonry to image.
 
 == Description ==
 
-*   Add the effect of Masonry to image.
+* Add the effect of Masonry to image.
+
+* Add effect to images inserted into WordPress posts, custom posts and pages.
+* Add effect to the WordPress gallery.
+* Add effect to the WordPress home, category and archive pages.
+* Can set the apply in each page or post or custom post.
+
+* Works with [GalleryLink](http://wordpress.org/plugins/gallerylink/).
+* Works with [MediaLink](http://wordpress.org/plugins/medialink/).
 
 *   Japanese (ja) - [Katsushi Kawamori](http://gallerylink.nyanko.org/medialink/simple-masonry-gallery/)
 
@@ -33,6 +41,11 @@ none
 4. Settings
 
 == Changelog ==
+
+= 3.0 =
+Fixed problem of when the gallery and links to media files usually are mixed within a page.
+Works with GalleryLink.
+Works with MediaLink.
 
 = 2.0 =
 Change management screen to responsive tab menu design.
@@ -58,6 +71,7 @@ Fixed of problem of error in debug mode.
 
 == Upgrade Notice ==
 
+= 3.0 =
 = 2.0 =
 = 1.5 =
 = 1.4 =

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Simple Masonry Gallery
 Plugin URI: http://wordpress.org/plugins/simple-masonry-gallery/
-Version: 2.0
+Version: 3.0
 Description: Add the effect of Masonry to image.
 Author: Katsushi Kawamori
 Author URI: http://gallerylink.nyanko.org/medialink/simple-masonry-gallery/
@@ -54,13 +54,9 @@ Domain Path: /languages
 	$footer_jscss_s = array();
 	$simplemasonry->footer_jscss_s = $footer_jscss_s;
 
-	// for post or page
-	add_filter( 'the_content', array($simplemasonry, 'add_img_tag'), -999 );
+	add_action( 'the_post', array($simplemasonry, 'filter_select') );
 
-	// for gallery
-	add_filter( 'post_gallery', array($simplemasonry, 'add_gallery') );
-
-	add_action( 'wp_footer', array($simplemasonry, 'add_footer'), 17 );
+	add_action( 'wp_footer', array($simplemasonry, 'add_footer') );
 
 	unset($simplemasonry);
 
