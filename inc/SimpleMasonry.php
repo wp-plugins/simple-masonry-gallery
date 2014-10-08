@@ -141,7 +141,7 @@ class SimpleMasonry {
 		}
 
 		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script('masonry' , get_template_directory_uri() . '/js/masonry.pkgd.min.js' , array('jquery') , false, true);
+		wp_enqueue_script('jquery-masonry');
 
 	}
 
