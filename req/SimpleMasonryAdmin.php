@@ -469,11 +469,9 @@ $simplemasonry_add_jscss = <<<SIMPLEMASONRYGALLERY
 
 <!-- BEGIN: Simple Masonry Gallery -->
 <script type="text/javascript">
-	jQuery(document).ready(function () {
-		jQuery('#simplemasonry-admin-tabs').responsiveTabs({
-			startCollapsed: 'accordion'
-		});
-	});
+jQuery('#simplemasonry-admin-tabs').responsiveTabs({
+  startCollapsed: 'accordion'
+});
 </script>
 <script type="text/javascript">
 	jQuery(function(){

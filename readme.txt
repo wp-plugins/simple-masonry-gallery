@@ -3,8 +3,8 @@ Contributors: Katsushi Kawamori
 Donate link: http://gallerylink.nyanko.org/medialink/simple-masonry-gallery/
 Tags: masonry, jquery, gallery, image, images, photo, photos, picture, pictures
 Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 3.1
+Tested up to: 4.0.1
+Stable tag: 3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,9 @@ none
 
 == Changelog ==
 
+= 3.2 =
+Fixed a problem of Java Script for admin screen.
+
 = 3.1 =
 Fixed problem of enqueuing both scripts and styles.
 
@@ -74,6 +77,7 @@ Fixed of problem of error in debug mode.
 
 == Upgrade Notice ==
 
+= 3.2 =
 = 3.1 =
 = 3.0 =
 = 2.0 =
