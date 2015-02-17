@@ -17,3 +17,6 @@ msgstr ""
 
 msgid "Number of titles to show to this page"
 msgstr ""
+
+msgid "I need a donation. This is because, I want to continue the development and support of plugins."
+msgstr ""

@@ -91,8 +91,9 @@ class SimpleMasonryAdmin {
 	  <ul>
 	    <li><a href="#simplemasonry-admin-tabs-1"><?php _e('Settings'); ?></a></li>
 		<li><a href="#simplemasonry-admin-tabs-2"><?php _e('Caution:'); ?></a></li>
+		<li><a href="#simplemasonry-admin-tabs-3"><?php _e('Donate to this plugin &#187;'); ?></a></li>
 	<!--
-		<li><a href="#simplemasonry-admin-tabs-3">FAQ</a></li>
+		<li><a href="#simplemasonry-admin-tabs-4">FAQ</a></li>
 	 -->
 	  </ul>
 
@@ -214,8 +215,17 @@ class SimpleMasonryAdmin {
 		</div>
 	  </div>
 
+		<div id="simplemasonry-admin-tabs-3">
+		<div class="wrap">
+			<h3><?php _e('I need a donation. This is because, I want to continue the development and support of plugins.', 'simplemasonry'); ?></h3>
+			<div align="right">Katsushi Kawamori</div>
+			<h3 style="float: left;"><?php _e('Donate to this plugin &#187;'); ?></h3>
+<a href='https://pledgie.com/campaigns/28307' target="_blank"><img alt='Click here to lend your support to: Various Plugins for WordPress and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/28307.png?skin_name=chrome' border='0' ></a>
+		</div>
+		</div>
+
 	<!--
-	  <div id="simplemasonry-admin-tabs-3">
+	  <div id="simplemasonry-admin-tabs-4">
 		<div class="wrap">
 		<h2>FAQ</h2>
 
@@ -271,6 +281,7 @@ class SimpleMasonryAdmin {
 						'pagemax' => intval($_POST['simplemasonry_mgsettings_pagemax'])
 						);
 		update_option( 'simplemasonry_mgsettings', $mgsettings_tbl );
+		echo '<div class="updated"><ul><li>'.__('Settings').' --> '.__('Settings saved.').'</li></ul></div>';
 
 	}
 

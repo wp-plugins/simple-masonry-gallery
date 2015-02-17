@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ja\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.7\n"
 
 msgid ""
 "Meta-box of Simple Masonry Gallery will be added to [Edit Post] and [Edit "
@@ -20,3 +20,9 @@ msgstr ""
 
 msgid "Number of titles to show to this page"
 msgstr "このページへ表示数するタイトルの数"
+
+msgid ""
+"I need a donation. This is because, I want to continue the development and "
+"support of plugins."
+msgstr ""
+"私はプラグインの開発とサポートを継続させるために寄付を必要としています。"

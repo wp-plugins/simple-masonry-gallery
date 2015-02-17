@@ -1,10 +1,10 @@
 === Simple Masonry Gallery ===
 Contributors: Katsushi Kawamori
-Donate link: http://gallerylink.nyanko.org/medialink/simple-masonry-gallery/
+Donate link: http://pledgie.com/campaigns/28307
 Tags: masonry, jquery, gallery, image, images, photo, photos, picture, pictures
 Requires at least: 3.0.1
-Tested up to: 4.0.1
-Stable tag: 3.2
+Tested up to: 4.1
+Stable tag: 3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ Add the effect of Masonry to image.
 * Works with [GalleryLink](http://wordpress.org/plugins/gallerylink/).
 * Works with [MediaLink](http://wordpress.org/plugins/medialink/).
 
-*   Japanese (ja) - [Katsushi Kawamori](http://gallerylink.nyanko.org/medialink/simple-masonry-gallery/)
+*   Japanese (ja) - [Katsushi Kawamori](http://riverforest-wp.info/)
 
 == Installation ==
 
@@ -41,6 +41,12 @@ none
 4. Settings
 
 == Changelog ==
+
+= 3.3 =
+Add screen of donate.
+Change the display of the message.
+Change readme.txt.
+Change /languages.
 
 = 3.2 =
 Fixed a problem of Java Script for admin screen.
@@ -77,6 +83,7 @@ Fixed of problem of error in debug mode.
 
 == Upgrade Notice ==
 
+= 3.3 =
 = 3.2 =
 = 3.1 =
 = 3.0 =
