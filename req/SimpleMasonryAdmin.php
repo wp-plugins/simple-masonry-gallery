@@ -51,6 +51,7 @@ class SimpleMasonryAdmin {
 	function load_custom_wp_admin_style() {
 		wp_enqueue_style( 'jquery-responsiveTabs', SIMPLEMASONRY_PLUGIN_URL.'/css/responsive-tabs.css' );
 		wp_enqueue_style( 'jquery-responsiveTabs-style', SIMPLEMASONRY_PLUGIN_URL.'/css/style.css' );
+		wp_enqueue_style( 'simple-masonry-gallery',  SIMPLEMASONRY_PLUGIN_URL.'/css/simple-masonry-gallery.css' );
 		wp_enqueue_script('jquery');
 		wp_enqueue_script( 'jquery-responsiveTabs', SIMPLEMASONRY_PLUGIN_URL.'/js/jquery.responsiveTabs.min.js' );
 	}
@@ -74,8 +75,14 @@ class SimpleMasonryAdmin {
 		}
 
 		if( !empty($_POST) ) { 
-			$this->options_updated();
-			$this->post_meta_updated();
+			if ( !empty($_POST['ShowToPage']) ) {
+				$this->options_updated();
+				echo '<div class="updated"><ul><li>'.__('Settings saved.').'</li></ul></div>';
+			}
+			if ( !empty($_POST['UpdateSimpleMasonryApply']) ) {
+				$this->post_meta_updated();
+				echo '<div class="updated"><ul><li>'.__('Apply Masonry to the selected content.', 'simplemasonry').'</li></ul></div>';
+			}
 		}
 		$scriptname = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH).'?page=simplemasonry';
 
@@ -102,12 +109,13 @@ class SimpleMasonryAdmin {
 		<h2><?php _e('Settings'); ?></h2>
 			<form method="post" action="<?php echo $scriptname; ?>">
 
-			<p class="submit">
-			  <input type="submit" name="Submit" value="<?php _e('Save Changes') ?>" />
-			</p>
+			<div class="submit">
+			  <input type="submit" name="UpdateSimpleMasonryApply" class="button-primary button-large" value="<?php _e('Save Changes') ?>" />
+			</div>
 
-			<p>
-			<div><?php _e('Number of titles to show to this page', 'simplemasonry'); ?>:<input type="text" name="simplemasonry_mgsettings_pagemax" value="<?php echo $pagemax; ?>" size="3" /></div>
+			<div style="float:left;"><?php _e('Number of items per page:'); ?><input type="text" name="simplemasonry_mgsettings_pagemax" value="<?php echo $pagemax; ?>" size="3" /></div>
+			<input type="submit" class="button" name="ShowToPage" value="<?php _e('Save') ?>" />
+			<div style="clear:both"></div>
 
 			<?php
 			$args = array(
@@ -134,25 +142,25 @@ class SimpleMasonryAdmin {
 			$pageend = $page * $pagemax;
 			$pagelast = ceil($pageallcount / $pagemax);
 
+			if ( $pagelast > 1 ) {
+				$this->pagenation($page, $pagebegin, $pageend, $pagelast, $scriptname);
+			}
 			?>
-			<table class="wp-list-table widefat">
-			<tbody>
-				<tr>
-				<td align="right" colspan="3">
-				<?php $this->pagenation($page, $pagebegin, $pageend, $pagelast, $scriptname);
-				?>
-				</td>
-				</tr>
-				<tr>
-				<td align="left" valign="middle"><?php _e('Apply'); ?><div><input type="checkbox" id="group_simplemasonry" class="simplemasonry-admin-checkAll"></div></td>
-				<td align="left" valign="middle">
-				<div><?php _e('Title'); ?></div>
-				<div><?php _e('Type'); ?>&nbsp&nbsp<?php _e('Date/Time'); ?></div>
-				</td>
-				<td align="left" valign="middle">
-				<div><?php echo __('Columns').__('Width').'(px)'; ?></div>
-				</td>
-				</tr>
+			<div style="border-bottom: 1px solid; padding-top: 5px; padding-bottom: 5px;">
+				<div>
+				<?php
+				_e('Apply'); ?> -
+				<?php
+				_e('Title'); ?> -
+				<?php
+				_e('Type'); ?> -
+				<?php
+				_e('Date/Time'); ?> -
+				<?php
+				echo __('Columns').__('Width').'(px)'; ?>
+				</div>
+			</div>
+
 			<?php
 
 			if ($postpages) {
@@ -166,21 +174,20 @@ class SimpleMasonryAdmin {
 						$posttype = $postpage->post_type;
 						$date = $postpage->post_date;
 					?>
-						<tr>
-							<td align="left" valign="middle" border="1">
-							    <input type="hidden" class="group_simplemasonry" name="simplemasonry_applys[<?php echo $postpage->ID; ?>]" value="false">
-							    <input type="checkbox" class="group_simplemasonry" name="simplemasonry_applys[<?php echo $postpage->ID; ?>]" value="true" <?php if ( $apply == true ) { echo 'checked'; }?>>
-							</td>
-							<td align="left" valign="middle">
-							<div><a style="color: #4682b4;" title="<?php _e('View');?>" href="<?php echo $link; ?>" target="_blank"><?php echo $title; ?></a></div>
-							<div><?php echo $posttype; ?>&nbsp&nbsp<?php echo $date; ?></div>
-							</td>
-							<td align="left" valign="middle">
-							<div>
-								<input type="text" name="simplemasonry_widths[<?php echo $postpage->ID; ?>]" value="<?php echo $width; ?>" size="4">
-							</div>
-							</td>
-						</tr>
+
+					<div style="border-bottom: 1px solid; padding-top: 5px; padding-bottom: 5px;">
+						<div style="float: left;">
+					    <input type="hidden" class="group_simplemasonry" name="simplemasonry_applys[<?php echo $postpage->ID; ?>]" value="false">
+					    <input type="checkbox" class="group_simplemasonry" name="simplemasonry_applys[<?php echo $postpage->ID; ?>]" value="true" <?php if ( $apply == true ) { echo 'checked'; }?>>
+						<a style="color: #4682b4;" title="<?php _e('View');?>" href="<?php echo $link; ?>" target="_blank"><?php echo $title; ?></a>
+						<span style="margin-right: 1em;"></span>
+						<?php echo $posttype; ?>
+						<span style="margin-right: 1em;"></span>
+						<?php echo $date; ?>
+						<input type="text" name="simplemasonry_widths[<?php echo $postpage->ID; ?>]" value="<?php echo $width; ?>" size="4">
+						</div>
+						<div style="clear:both"></div>
+					</div>
 					<?php
 					} else {
 					?>
@@ -189,19 +196,14 @@ class SimpleMasonryAdmin {
 					}
 				}
 			}
+			if ( $pagelast > 1 ) {
+				$this->pagenation($page, $pagebegin, $pageend, $pagelast, $scriptname);
+			}
 			?>
-				<tr>
-				<td align="right" colspan="3">
-				<?php $this->pagenation($page, $pagebegin, $pageend, $pagelast, $scriptname);
-				?>
-				</td>
-				</tr>
-			</tbody>
-			</table>
 
-			<p class="submit">
-			  <input type="submit" name="Submit" value="<?php _e('Save Changes') ?>" />
-			</p>
+			<div class="submit">
+			  <input type="submit" name="UpdateSimpleMasonryApply" class="button-primary button-large" value="<?php _e('Save Changes') ?>" />
+			</div>
 
 			</form>
 		</div>
@@ -217,10 +219,20 @@ class SimpleMasonryAdmin {
 
 		<div id="simplemasonry-admin-tabs-3">
 		<div class="wrap">
-			<h3><?php _e('I need a donation. This is because, I want to continue the development and support of plugins.', 'simplemasonry'); ?></h3>
-			<div align="right">Katsushi Kawamori</div>
-			<h3 style="float: left;"><?php _e('Donate to this plugin &#187;'); ?></h3>
-<a href='https://pledgie.com/campaigns/28307' target="_blank"><img alt='Click here to lend your support to: Various Plugins for WordPress and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/28307.png?skin_name=chrome' border='0' ></a>
+			<?php
+			$plugin_datas = get_file_data( SIMPLEMASONRY_PLUGIN_BASE_DIR.'/simplemasonry.php', array('version' => 'Version') );
+			$plugin_version = __('Version:').' '.$plugin_datas['version'];
+			?>
+			<h4 style="margin: 5px; padding: 5px;">
+			<?php echo $plugin_version; ?> |
+			<a style="text-decoration: none;" href="https://wordpress.org/support/plugin/simple-masonry-gallery" target="_blank"><?php _e('Support Forums') ?></a> |
+			<a style="text-decoration: none;" href="https://wordpress.org/support/view/plugin-reviews/simple-masonry-gallery" target="_blank"><?php _e('Reviews', 'mediafromftp') ?></a>
+			</h4>
+			<div style="width: 250px; height: 170px; margin: 5px; padding: 5px; border: #CCC 2px solid;">
+			<h3><?php _e('Please make a donation if you like my work or would like to further the development of this plugin.', 'simplemasonry'); ?></h3>
+			<div style="text-align: right; margin: 5px; padding: 5px;"><span style="padding: 3px; color: #ffffff; background-color: #008000">Plugin Author</span> <span style="font-weight: bold;">Katsushi Kawamori</span></div>
+	<a style="margin: 5px; padding: 5px;" href='https://pledgie.com/campaigns/28307' target="_blank"><img alt='Click here to lend your support to: Various Plugins for WordPress and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/28307.png?skin_name=chrome' border='0' ></a>
+			</div>
 		</div>
 		</div>
 
@@ -251,23 +263,33 @@ class SimpleMasonryAdmin {
 	 */
 	function pagenation($page, $pagebegin, $pageend, $pagelast, $scriptname){
 
-			$pageprev = $page - 1;
-			$pagenext = $page + 1;
-			?>
-<div class='tablenav-pages'>
-<span class='pagination-links'>
-<?php if ( $page <> 1 ){
-		?><a title='<?php _e('Go to the first page'); ?>' href='<?php echo $scriptname; ?>'>&laquo;</a>
-		<a title='<?php _e('Go to the previous page'); ?>' href='<?php echo $scriptname.'&p='.$pageprev ; ?>'>&lsaquo;</a>
-<?php }	?>
-<?php echo $page; ?> / <?php echo $pagelast; ?>
-<?php if ( $page <> $pagelast ){
-		?><a title='<?php _e('Go to the next page'); ?>' href='<?php echo $scriptname.'&p='.$pagenext ; ?>'>&rsaquo;</a>
-		<a title='<?php _e('Go to the last page'); ?>' href='<?php echo $scriptname.'&p='.$pagelast; ?>'>&raquo;</a>
-<?php }	?>
-</span>
-</div>
-			<?php
+		$pageprev = $page - 1;
+		$pagenext = $page + 1;
+		$scriptnamefirst = add_query_arg( array('p' => '1'), $scriptname);
+		$scriptnameprev = add_query_arg( array('p' => $pageprev), $scriptname);
+		$scriptnamenext = add_query_arg( array('p' => $pagenext), $scriptname);
+		$scriptnamelast = add_query_arg( array('p' => $pagelast), $scriptname);
+		?>
+		<div class="simple-masonry-gallery-pages">
+		<span class="simple-masonry-gallery-links">
+		<?php
+		if ( $page <> 1 ){
+			?><a title='<?php _e('Go to the first page'); ?>' href='<?php echo $scriptnamefirst; ?>'>&laquo;</a>
+			<a title='<?php _e('Go to the previous page'); ?>' href='<?php echo $scriptnameprev; ?>'>&lsaquo;</a>
+		<?php
+		}
+		echo $page; ?> / <?php echo $pagelast;
+		?>
+		<?php
+		if ( $page <> $pagelast ){
+			?><a title='<?php _e('Go to the next page'); ?>' href='<?php echo $scriptnamenext; ?>'>&rsaquo;</a>
+			<a title='<?php _e('Go to the last page'); ?>' href='<?php echo $scriptnamelast; ?>'>&raquo;</a>
+		<?php
+		}
+		?>
+		</span>
+		</div>
+		<?php
 
 	}
 
@@ -281,7 +303,6 @@ class SimpleMasonryAdmin {
 						'pagemax' => intval($_POST['simplemasonry_mgsettings_pagemax'])
 						);
 		update_option( 'simplemasonry_mgsettings', $mgsettings_tbl );
-		echo '<div class="updated"><ul><li>'.__('Settings').' --> '.__('Settings saved.').'</li></ul></div>';
 
 	}
 

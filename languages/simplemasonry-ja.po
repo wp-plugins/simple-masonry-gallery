@@ -11,6 +11,9 @@ msgstr ""
 "Language: ja\n"
 "X-Generator: Poedit 1.6.7\n"
 
+msgid "Apply Masonry to the selected content."
+msgstr "選択されたコンテンツにMasonryを適用します。"
+
 msgid ""
 "Meta-box of Simple Masonry Gallery will be added to [Edit Post] and [Edit "
 "Page]. Please apply it. Also, please enter the column width."
@@ -18,11 +21,8 @@ msgstr ""
 "Simple Masonry Galleryは、[投稿の編集]と[固定ページを編集]にメタボックスを追"
 "加します。それを、適用にしてください。また、カラム幅を入力してください。"
 
-msgid "Number of titles to show to this page"
-msgstr "このページへ表示数するタイトルの数"
-
 msgid ""
-"I need a donation. This is because, I want to continue the development and "
-"support of plugins."
+"Please make a donation if you like my work or would like to further the "
+"development of this plugin."
 msgstr ""
 "私はプラグインの開発とサポートを継続させるために寄付を必要としています。"

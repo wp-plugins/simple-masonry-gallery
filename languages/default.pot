@@ -10,13 +10,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.6.4\n"
 
+msgid "Apply Masonry to the selected content."
+msgstr ""
+
 msgid ""
 "Meta-box of Simple Masonry Gallery will be added to [Edit Post] and [Edit "
 "Page]. Please do apply it."
 msgstr ""
 
-msgid "Number of titles to show to this page"
-msgstr ""
-
-msgid "I need a donation. This is because, I want to continue the development and support of plugins."
+msgid "Please make a donation if you like my work or would like to further the development of this plugin."
 msgstr ""

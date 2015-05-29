@@ -3,8 +3,8 @@ Contributors: Katsushi Kawamori
 Donate link: http://pledgie.com/campaigns/28307
 Tags: masonry, jquery, gallery, image, images, photo, photos, picture, pictures
 Requires at least: 3.0.1
-Tested up to: 4.1
-Stable tag: 3.3
+Tested up to: 4.2
+Stable tag: 3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,8 +19,7 @@ Add the effect of Masonry to image.
 * Add effect to the WordPress home, category and archive pages.
 * Can set the apply in each page or post or custom post.
 
-* Works with [GalleryLink](http://wordpress.org/plugins/gallerylink/).
-* Works with [MediaLink](http://wordpress.org/plugins/medialink/).
+* Works with [Boxers and Swipers](http://wordpress.org/plugins/boxers-and-swipers/).
 
 *   Japanese (ja) - [Katsushi Kawamori](http://riverforest-wp.info/)
 
@@ -41,6 +40,12 @@ none
 4. Settings
 
 == Changelog ==
+
+= 3.4 =
+The short code of the gallery you can be multiple insertion.
+Change management screen.
+Change readme.txt.
+Change /languages.
 
 = 3.3 =
 Add screen of donate.
@@ -83,6 +88,7 @@ Fixed of problem of error in debug mode.
 
 == Upgrade Notice ==
 
+= 3.4 =
 = 3.3 =
 = 3.2 =
 = 3.1 =

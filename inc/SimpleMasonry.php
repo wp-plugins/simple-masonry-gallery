@@ -91,8 +91,12 @@ class SimpleMasonry {
 			$gallery_shortcode = NULL;
 			$pattern_gallery = '/\[' . preg_quote('gallery ') . '[^\]]*\]/im';
 			if ( !empty($link) && preg_match($pattern_gallery, $link) ) {
-				preg_match($pattern_gallery, $link, $retgallery);
-				$gallery_shortcode = $retgallery[0];
+				preg_match_all($pattern_gallery, $link, $retgallery);
+				foreach ( $retgallery as $ret=>$gals ) {
+					foreach ( $gals as $gal ) {
+						$gallery_shortcode .= $gal;
+					}
+				}
 			}
 
 			$gallerylink_shortcode = NULL;
